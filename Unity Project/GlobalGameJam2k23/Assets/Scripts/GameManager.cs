@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 using TMPro;
 
@@ -14,6 +15,10 @@ public class GameManager : MonoBehaviour
     public float animationSpeed;
     public float repetitionTimes;
     public TextMeshProUGUI directionText;
+    public GameObject winPopUp;
+    public GameObject buttons;
+    public Transform center;
+    public float width, height;
 
 
 
@@ -45,6 +50,21 @@ public class GameManager : MonoBehaviour
         focusedCamera.SetActive(!focusedCamera.activeSelf);
         mapCmaera.SetActive(!mapCmaera.activeSelf);
     }
+    public void DisactivateControls()
+    {
+        foreach (Transform button in buttons.transform)
+        {
+            button.GetComponent<Button>().interactable = false;
+        }
+    }
+    public void ActivateControls()
+    {
+        foreach (Transform button in buttons.transform)
+        {
+            button.GetComponent<Button>().interactable = true;
+        }
+    }
+
 
 
 }

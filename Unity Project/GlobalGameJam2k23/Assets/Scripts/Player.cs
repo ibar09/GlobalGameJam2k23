@@ -72,10 +72,14 @@ public class Player : MonoBehaviour
                     else
                     {
                         nextPosition = Vector2.MoveTowards(prevPointPosition, (Vector2)targetPosition, 0.2f);
+                        Direction currentDirection = ComputeDirection(spriteShapeController.spline.GetPosition(2), prevPointPosition);
+                        Direction nextDirection = ComputeDirection(prevPointPosition, nextPosition);
+                        setTangent(1, currentDirection, nextDirection);
                     }
                 }
 
                 spriteShapeController.spline.SetPosition(0, nextPosition);
+                currentPosition = nextPosition;
                 updateEdgeCollider();
                 headTransform.localPosition = nextPosition;
             }
@@ -90,6 +94,7 @@ public class Player : MonoBehaviour
     {
         targetPosition = null;
         gameManager.NextTurn();
+        gameManager.ActivateControls();
     }
 
 
@@ -144,11 +149,11 @@ public class Player : MonoBehaviour
                 targetPosition = currentPosition + new Vector3(steps, 0, 0);
                 break;
         }
+        targetPosition = new Vector2(Mathf.Clamp(((Vector2)targetPosition).x, gameManager.center.position.x - transform.position.x - gameManager.width / 2 + 0.5f, gameManager.center.position.x - transform.position.x + gameManager.width / 2 - 0.5f), ((Vector2)targetPosition).y);
 
         if (((Vector2)targetPosition).y > -1)
         {
             targetPosition = new Vector2(((Vector2)targetPosition).x, -1);
-            Debug.Log(((Vector2)targetPosition).y);
         }
 
         if (targetPosition == currentPosition)
@@ -157,57 +162,86 @@ public class Player : MonoBehaviour
             return;
         }
 
+        Debug.Log("targetPosition: x: " + ((Vector2)targetPosition).x + " y: " + ((Vector2)targetPosition).y);
+
         Vector3 prevPointPosition = spriteShapeController.spline.GetPosition(1);
-        Direction currentDirection;
-        if (prevPointPosition.x == currentPosition.x)
-        {
-            if (prevPointPosition.y > currentPosition.y)
-            {
-                currentDirection = Direction.DOWN;
-            }
-            else
-            {
-                currentDirection = Direction.UP;
-            }
-        }
-        else
-        {
-            if (prevPointPosition.x > currentPosition.x)
-            {
-                currentDirection = Direction.LEFT;
-            }
-            else
-            {
-                currentDirection = Direction.RIGHT;
-            }
-        }
+        Direction currentDirection = ComputeDirection(prevPointPosition, currentPosition);
 
-        if ((direction == Direction.UP || direction == Direction.DOWN) != (currentDirection == Direction.UP || currentDirection == Direction.DOWN))
-        {
-            spriteShapeController.spline.SetTangentMode(0, ShapeTangentMode.Continuous);
-            spriteShapeController.spline.SetLeftTangent(0, new Vector3(-0.25f, -0.25f, 0));
-            spriteShapeController.spline.SetRightTangent(0, new Vector3(0.25f, 0.25f, 0));
+        setTangent(0, currentDirection, direction);
 
+        if (!areSimilarDirections(currentDirection, direction))
+        {
             spriteShapeController.spline.InsertPointAt(0, Vector2.MoveTowards(spriteShapeController.spline.GetPosition(0), (Vector2)targetPosition, 0.2f));
         }
     }
 
+    private static bool areSimilarDirections(Direction prevDirection, Direction nextDirection)
+    {
+        return (prevDirection == Direction.UP || prevDirection == Direction.DOWN) == (nextDirection == Direction.UP || nextDirection == Direction.DOWN);
+    }
+
+    void setTangent(int index, Direction prevDirection, Direction nextDirection)
+    {
+        Debug.Log("prevDirection: " + prevDirection + " nextDirection: " + nextDirection);
+        if (!areSimilarDirections(prevDirection, nextDirection))
+        {
+            spriteShapeController.spline.SetTangentMode(index, ShapeTangentMode.Continuous);
+            if ((prevDirection == Direction.UP && nextDirection == Direction.RIGHT) || (prevDirection == Direction.RIGHT && nextDirection == Direction.UP))
+            {
+                spriteShapeController.spline.SetLeftTangent(index, new Vector3(0.25f, 0.25f, 0));
+                spriteShapeController.spline.SetRightTangent(index, new Vector3(-0.25f, -0.25f, 0));
+            }
+            else if ((prevDirection == Direction.LEFT && nextDirection == Direction.DOWN) || (prevDirection == Direction.DOWN && nextDirection == Direction.LEFT))
+            {
+                spriteShapeController.spline.SetLeftTangent(index, new Vector3(-0.25f, -0.25f, 0));
+                spriteShapeController.spline.SetRightTangent(index, new Vector3(0.25f, 0.25f, 0));
+            }
+            else if ((prevDirection == Direction.DOWN && nextDirection == Direction.RIGHT) || (prevDirection == Direction.RIGHT && nextDirection == Direction.DOWN))
+            {
+                spriteShapeController.spline.SetLeftTangent(index, new Vector3(0.25f, -0.25f, 0));
+                spriteShapeController.spline.SetRightTangent(index, new Vector3(-0.25f, 0.25f, 0));
+            }
+            else if ((prevDirection == Direction.UP && nextDirection == Direction.LEFT) || (prevDirection == Direction.LEFT && nextDirection == Direction.UP))
+            {
+                spriteShapeController.spline.SetLeftTangent(index, new Vector3(-0.25f, 0.25f, 0));
+                spriteShapeController.spline.SetRightTangent(index, new Vector3(0.25f, -0.25f, 0));
+            }
+        }
+    }
+
+    private static Direction ComputeDirection(Vector3 prevPosition, Vector3 nextPosition)
+    {
+        if (nextPosition.x == prevPosition.x)
+        {
+            if (nextPosition.y < prevPosition.y)
+            {
+                return Direction.DOWN;
+            }
+            else
+            {
+                return Direction.UP;
+            }
+        }
+        else
+        {
+            if (nextPosition.x < prevPosition.x)
+            {
+                return Direction.LEFT;
+            }
+            else
+            {
+                return Direction.RIGHT;
+            }
+        }
+    }
 
     public void Move(int steps)
     {
 
-        MoveBy(steps, direction);//DirectionRng());
+        StartCoroutine(DirectionChooser(steps));
     }
 
 
-    IEnumerator DirectionChooser()
-    {
-        foreach (string i in Enum.GetNames(typeof(Direction)))
-        {
-
-        }
-        yield return null;
-    }
 
 
     void OnTriggerEnter2D(Collider2D other)
@@ -287,6 +321,7 @@ public class Player : MonoBehaviour
     IEnumerator DirectionChooser(int steps)
     {
         float x = gameManager.animationSpeed;
+        gameManager.DisactivateControls();
         while (gameManager.animationSpeed < 0.65f)
         {
             foreach (string i in Enum.GetNames(typeof(Direction)))
