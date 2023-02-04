@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class GameManager : MonoBehaviour
     public int playersNumber;
     public List<Player> players;
     public CinemachineVirtualCamera cam;
+    public float animationSpeed;
+    public float repetitionTimes;
+    public TextMeshProUGUI directionText;
 
 
 
