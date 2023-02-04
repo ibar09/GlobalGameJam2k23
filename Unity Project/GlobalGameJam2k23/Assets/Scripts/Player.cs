@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.U2D;
+using TMPro;
 public class Player : MonoBehaviour
 {
     public enum Direction
@@ -15,6 +17,12 @@ public class Player : MonoBehaviour
     public SpriteShapeController spriteShapeController;
     private float speed = 0.005f;
     private Vector2? targetPosition = null;
+    public GameManager gameManager;
+    public float animationSpeed;
+    public TextMeshProUGUI directionText;
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +62,7 @@ public class Player : MonoBehaviour
     public Direction DirectionRng()
     {
         float downWeight = 0.25f + x;
-        float percentage = Random.Range(0, 1f);
+        float percentage = UnityEngine.Random.Range(0, 1f);
         Debug.Log(percentage);
         if (percentage <= downWeight)
         {
@@ -64,7 +72,7 @@ public class Player : MonoBehaviour
         else
         {
             x += 0.05f;
-            int newRng = Random.Range(1, 4);
+            int newRng = UnityEngine.Random.Range(1, 4);
             Debug.Log(newRng);
             switch (newRng)
             {
@@ -117,13 +125,22 @@ public class Player : MonoBehaviour
         this.direction = direction;
     }
 
-    public GameManager gameManager;
-    public int id;
+
 
     public void Move(int steps)
     {
 
         MoveBy(steps, DirectionRng());
+    }
+
+
+    IEnumerator DirectionChooser()
+    {
+        foreach (string i in Enum.GetNames(typeof(Direction)))
+        {
+
+        }
+        yield return null;
     }
 
 
