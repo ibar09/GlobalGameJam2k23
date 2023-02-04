@@ -27,14 +27,14 @@ public class GameManager : MonoBehaviour
             currentPlayer = players[players.IndexOf(currentPlayer) + 1];
         else
             currentPlayer = players[0];
-        cam.Follow = currentPlayer.transform;
+        cam.Follow = currentPlayer.headTransform;
     }
 
 
     public void Move(int steps)
     {
         currentPlayer.Move(steps);
-        NextTurn();
+
     }
     public void SwitchCamera()
     {
