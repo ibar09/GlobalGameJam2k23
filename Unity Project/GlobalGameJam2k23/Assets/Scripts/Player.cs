@@ -251,8 +251,8 @@ public class Player : MonoBehaviour
 
     public void Move(int steps)
     {
-        MoveBy(steps, direction);
-        // StartCoroutine(DirectionChooser(steps));
+        // MoveBy(steps, direction);
+        StartCoroutine(DirectionChooser(steps));
     }
 
 

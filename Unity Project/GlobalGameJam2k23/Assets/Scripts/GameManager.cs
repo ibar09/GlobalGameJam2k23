@@ -7,6 +7,7 @@ using UnityEngine.U2D;
 using Cinemachine;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,16 +31,55 @@ public class GameManager : MonoBehaviour
     public SpriteShape[] playerSpriteShapes;
     public int consumableCount;
     public GameObject[] consumablePrefabs;
+    public GameObject[] treePrefabs;
+    public GameObject gameUI;
+    public GameObject Menu;
 
 
-    public void Start()
+    /* private void Awake()
+     {
+         GameManager[] objs = GameObject.FindObjectsOfType<GameManager>();
+         if (objs.Length > 1)
+         {
+             Destroy(this.gameObject);
+         }
+
+         DontDestroyOnLoad(this.gameObject);
+     }*/
+    private void Start()
     {
-        generateMap(2);
+        //generateMap(2);
     }
-
+    public void setDimensionsByPlayerCount(int N)
+    {
+        switch (N)
+        {
+            case 2:
+                width = 11;
+                height = 11;
+                consumableCount = 8;
+                break;
+            case 3:
+                width = 15;
+                height = 15;
+                consumableCount = 14;
+                break;
+            case 4:
+                width = 19;
+                height = 19;
+                consumableCount = 20;
+                break;
+        }
+    }
     public void generateMap(int N)
 
     {
+        // SceneManager.LoadScene(1);
+
+        Debug.Log(N);
+        gameUI.SetActive(true);
+        Menu.SetActive(false);
+        setDimensionsByPlayerCount(N);
         int blockWidth = 30;
         TileBase[] tileArray = new TileBase[(width + 2 * blockWidth) * (height + 10)];
         for (int index = 0; index < tileArray.Length; index++)
@@ -68,6 +108,8 @@ public class GameManager : MonoBehaviour
             players.Add(Instantiate(playerPrefab).GetComponent<Player>());
             playerPosition += new Vector3((float)(width - N) / (N + 1) + 0.5f, 0, 0);
             players[i].transform.position = playerPosition;
+            var tree = Instantiate(treePrefabs[i % treePrefabs.Length]);
+            tree.transform.position = playerPosition + new Vector3(0, 0.04f, 0);
             playerPosition += new Vector3(0.5f, 0, 0);
             players[i].gameManager = this;
             players[i].GetComponent<SpriteShapeController>().spriteShape = playerSpriteShapes[i % playerSpriteShapes.Length];
@@ -141,4 +183,11 @@ public class GameManager : MonoBehaviour
             button.GetComponent<Button>().interactable = true;
         }
     }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+
+
 }

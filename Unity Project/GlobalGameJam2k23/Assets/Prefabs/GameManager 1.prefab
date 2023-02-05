@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3031921229294292447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3031921229294292445}
+  - component: {fileID: 3031921229294292444}
+  m_Layer: 0
+  m_Name: GameManager 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3031921229294292445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3031921229294292447}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.65385467, y: 0.606879, z: -0.030629966}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3031921229294292444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3031921229294292447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6065d61d02231af4d94bbb36d88caed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPlayer: {fileID: 0}
+  focusedCamera: {fileID: 0}
+  mapCamera: {fileID: 6514064076117270585, guid: dbf33b783d09112418db28c306d08bbe, type: 3}
+  players: []
+  cam: {fileID: 6638274426058937108, guid: 4e5a64028942ba04487c6f31bb2ab09a, type: 3}
+  animationSpeed: 0.05
+  repetitionTimes: 4
+  directionText: {fileID: 1179990933082105566, guid: 0ae74ecee9c5bd448962f9f419d4332c, type: 3}
+  winPopUp: {fileID: 800550893570505588, guid: 55052f165bd6b3641a26ebfd7a6b4d81, type: 3}
+  buttons: {fileID: 1840828748156199665, guid: 9afdbc28a52d89549bb06449cf2dd00e, type: 3}
+  width: 14
+  height: 14
+  map: {fileID: 2205438179891400606, guid: 70b2d5eb27e2076409698148eb0f1cb2, type: 3}
+  playerPrefab: {fileID: 6836586687187273453, guid: 0654f8de1cd5d804896818b826bbe3e8, type: 3}
+  dirtTile: {fileID: 11400000, guid: 2562c42e5b2cc4d4292dd9d1b1559149, type: 2}
+  blockTile: {fileID: 11400000, guid: c16c8020a1b7b0940af617d9f77b0ed8, type: 2}
+  waterTile: {fileID: 11400000, guid: 4ed9bbc90b35c5846bef3aebd353baff, type: 2}
+  waterDetector: {fileID: 146809475538723054, guid: 26f97e96d85abce49a3077269bea4a5d, type: 3}
+  playerSpriteShapes:
+  - {fileID: 11400000, guid: ece37d0b3fc7f564d8c19ada140543ae, type: 2}
+  - {fileID: 11400000, guid: cfe69ce926cb6924abacb4054b639437, type: 2}
+  - {fileID: 11400000, guid: 59be593b2983c80489b6fa799290962d, type: 2}
+  - {fileID: 11400000, guid: 8d3824a7ccd55b74da9b6044b64cb79c, type: 2}
+  consumableCount: 15
+  consumablePrefabs:
+  - {fileID: 1344003027660308815, guid: 1e8b6fd4d2b32bc418eed904cdea08c3, type: 3}
+  - {fileID: 5255484711931178611, guid: b1c74653332a5524892cf68ce515f82a, type: 3}
+  - {fileID: 5255484711931178611, guid: 8a57426ec15f2f94c9022afd63daa7cb, type: 3}
+  treePrefabs:
+  - {fileID: 7670904458170195779, guid: 1592620e11c387544b0a71f3cb19a165, type: 3}
+  - {fileID: 541336344119999061, guid: 8896350ea17935f48baf2af3d1981895, type: 3}
+  - {fileID: 2348420311025766275, guid: 5b180fe209d01174f84d6eadaf7cf603, type: 3}
+  - {fileID: 3180177328376244347, guid: 995f47010152df948abb46266c3be01d, type: 3}
