@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class DownBoostConsumable : Consumable
 {
-    public override void DoEffect(GameObject player)
+    public override void DoEffect(GameObject head)
     {
-        FindObjectOfType<GameManager>().GiveDownBoostStatus(player.transform.parent.GetComponent<Player>());
+        var player = head.transform.parent.GetComponent<Player>();
+        player.x = 0.45f;
+        player.isDownBoosted = true;
+        player.downBoostCD = 0;
         Debug.Log("DownBoost given");
     }
 }

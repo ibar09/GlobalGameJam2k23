@@ -524,8 +524,6 @@ MonoBehaviour:
   directionText: {fileID: 1969680450}
   winPopUp: {fileID: 755685423}
   buttons: {fileID: 1822232282}
-  immunityCD: 0
-  downBoostCD: 0
   width: 14
   height: 14
   map: {fileID: 876100275}
@@ -534,6 +532,16 @@ MonoBehaviour:
   blockTile: {fileID: 11400000, guid: c16c8020a1b7b0940af617d9f77b0ed8, type: 2}
   waterTile: {fileID: 11400000, guid: 4ed9bbc90b35c5846bef3aebd353baff, type: 2}
   waterDetector: {fileID: 6545419}
+  playerSpriteShapes:
+  - {fileID: 11400000, guid: ece37d0b3fc7f564d8c19ada140543ae, type: 2}
+  - {fileID: 11400000, guid: cfe69ce926cb6924abacb4054b639437, type: 2}
+  - {fileID: 11400000, guid: 59be593b2983c80489b6fa799290962d, type: 2}
+  - {fileID: 11400000, guid: 8d3824a7ccd55b74da9b6044b64cb79c, type: 2}
+  consumableCount: 6
+  consumablePrefabs:
+  - {fileID: 5255484711931178611, guid: 8a57426ec15f2f94c9022afd63daa7cb, type: 3}
+  - {fileID: 5255484711931178611, guid: 1e8b6fd4d2b32bc418eed904cdea08c3, type: 3}
+  - {fileID: 5255484711931178611, guid: b1c74653332a5524892cf68ce515f82a, type: 3}
 --- !u!4 &459080111
 Transform:
   m_ObjectHideFlags: 0
@@ -549,6 +557,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &487241143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5255484711931178611, guid: 1e8b6fd4d2b32bc418eed904cdea08c3, type: 3}
+  m_PrefabInstance: {fileID: 695940252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &487241148
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 487241143}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 90150ce30af9b1e4283cff805fcfac97, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &513956356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,7 +1724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5255484711931178623, guid: 1e8b6fd4d2b32bc418eed904cdea08c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 5255484711931178623, guid: 1e8b6fd4d2b32bc418eed904cdea08c3, type: 3}
       propertyPath: m_LocalPosition.z

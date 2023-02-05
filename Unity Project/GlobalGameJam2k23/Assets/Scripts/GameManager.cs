@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
+using UnityEngine.U2D;
 using Cinemachine;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,10 +19,6 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI directionText;
     public GameObject winPopUp;
     public GameObject buttons;
-    private Player immunePlayer;
-    public int immunityCD, downBoostCD;
-    private bool isThereImmunity;
-    private bool isThereDownBoost;
     public int width, height;
     public Tilemap map;
     public GameObject playerPrefab;
@@ -29,9 +27,9 @@ public class GameManager : MonoBehaviour
     public TileBase waterTile;
     private Vector2 center;
     public BoxCollider2D waterDetector;
-
-
-
+    public SpriteShape[] playerSpriteShapes;
+    public int consumableCount;
+    public GameObject[] consumablePrefabs;
 
 
     public void Start()
@@ -72,11 +70,17 @@ public class GameManager : MonoBehaviour
             players[i].transform.position = playerPosition;
             playerPosition += new Vector3(0.5f, 0, 0);
             players[i].gameManager = this;
+            players[i].GetComponent<SpriteShapeController>().spriteShape = playerSpriteShapes[i % playerSpriteShapes.Length];
         }
         currentPlayer = players[0];
+        for (int i = 0; i < consumableCount; i++)
+        {
+            var consumable = Instantiate(consumablePrefabs[UnityEngine.Random.Range(0, consumablePrefabs.Length)]);
+            consumable.transform.position = new Vector3(MathF.Floor(UnityEngine.Random.Range(MathF.Round(center.x - (float)width / 2 + 1), MathF.Round(center.x + (float)width / 2 + 0.1f))) - 0.5f, MathF.Floor(UnityEngine.Random.Range(MathF.Round(center.y - (float)height / 2 - 0.1f), MathF.Round(center.y + (float)height / 2 - 3))) + 0.5f, 0);
+        }
         waterDetector.transform.position = new Vector2(center.x, center.y - (float)height / 2 - 2.5f);
         waterDetector.size = new Vector2(width, 5);
-        mapCamera.transform.position = new Vector3(center.x, center.y, -20);
+        mapCamera.transform.position = new Vector3(center.x, center.y + 1, -20);
         mapCamera.GetComponent<Camera>().orthographicSize = (float)height / 2 + 3;
         cam.Follow = currentPlayer.headTransform;
     }
@@ -88,23 +92,25 @@ public class GameManager : MonoBehaviour
     {
         currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
         cam.Follow = currentPlayer.headTransform;
-        if (isThereImmunity)
+        for (int i = 0; i < players.Count; i++)
         {
-            immunityCD++;
-            if (immunityCD == 3)
+            if (players[i].isImmune)
             {
-                immunityCD = 0;
-                DisactivateImmuneStatus(immunePlayer);
-
-            }
-            if (isThereDownBoost)
-            {
-                downBoostCD++;
-                if (downBoostCD == 6)
+                players[i].immunityCD++;
+                if (players[i].immunityCD == 3)
                 {
-                    immunityCD = 0;
-                    isThereDownBoost = false;
-                    Debug.Log("DownBoost given");
+                    players[i].immunityCD = 0;
+                    players[i].isImmune = false;
+                }
+            }
+            if (players[i].isDownBoosted)
+            {
+                players[i].downBoostCD++;
+                if (players[i].downBoostCD == 6)
+                {
+                    players[i].downBoostCD = 0;
+                    players[i].isDownBoosted = false;
+                    players[i].x = 0;
                 }
             }
         }
@@ -135,29 +141,4 @@ public class GameManager : MonoBehaviour
             button.GetComponent<Button>().interactable = true;
         }
     }
-
-    public void GiveImmuneStatus(Player player)
-    {
-        Debug.Log(player.transform);
-        player.GetComponent<EdgeCollider2D>().enabled = false;
-        immunePlayer = player;
-        isThereImmunity = true;
-
-    }
-    public void DisactivateImmuneStatus(Player player)
-    {
-        player.GetComponent<EdgeCollider2D>().enabled = true;
-        immunePlayer = null;
-        isThereImmunity = false;
-        Debug.Log("immunity taken");
-    }
-    public void GiveDownBoostStatus(Player player)
-    {
-        isThereDownBoost = true;
-        player.x = 0.45f;
-    }
-
-
-
-
 }

@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class ImmuneConsumable : Consumable
 {
-    public override void DoEffect(GameObject player)
+    public override void DoEffect(GameObject head)
     {
-        FindObjectOfType<GameManager>().GiveImmuneStatus(player.transform.parent.GetComponent<Player>());
+        var player = head.transform.parent.GetComponent<Player>();
+        player.isImmune = true;
+        player.immunityCD = 0;
         Debug.Log("Immunity given");
     }
 }

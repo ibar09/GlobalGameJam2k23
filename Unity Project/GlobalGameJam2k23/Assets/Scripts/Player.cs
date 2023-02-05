@@ -20,7 +20,10 @@ public class Player : MonoBehaviour
     public GameManager gameManager;
     public float animationSpeed;
     public TextMeshProUGUI directionText;
-
+    public bool isImmune = false;
+    public bool isDownBoosted = false;
+    public int immunityCD = 0;
+    public int downBoostCD = 0;
 
     Direction direction;
 
@@ -175,6 +178,11 @@ public class Player : MonoBehaviour
 
         setTangent(0, currentDirection, direction);
 
+        Debug.Log("----------------");
+        Debug.Log("currentDirection: " + currentDirection + " direction: " + direction);
+        Debug.Log("prevPointPosition: x: " + prevPointPosition.x + " y: " + prevPointPosition.y + " currentPosition: x: " + currentPosition.x + " y: " + currentPosition.y);
+        Debug.Log("----------------");
+
         if (!areSimilarDirections(currentDirection, direction))
         {
             spriteShapeController.spline.InsertPointAt(0, Vector2.MoveTowards(spriteShapeController.spline.GetPosition(0), (Vector2)targetPosition, 0.2f));
@@ -217,7 +225,7 @@ public class Player : MonoBehaviour
 
     private static Direction ComputeDirection(Vector3 prevPosition, Vector3 nextPosition)
     {
-        if (nextPosition.x == prevPosition.x)
+        if (MathF.Abs(nextPosition.x - prevPosition.x) < MathF.Abs(nextPosition.y - prevPosition.y))
         {
             if (nextPosition.y < prevPosition.y)
             {
@@ -252,7 +260,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (gameManager.currentPlayer != this && other.gameObject.CompareTag("Head") && other.gameObject != headTransform.gameObject)
+        if (!isImmune && gameManager.currentPlayer != this && other.gameObject.CompareTag("Head") && other.gameObject != headTransform.gameObject)
         {
             Vector2 collisionPoint = other.gameObject.transform.position - transform.position;
             Debug.Log("Collision point, x: " + collisionPoint.x + " y: " + collisionPoint.y);
