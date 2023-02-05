@@ -4,13 +4,13 @@ using UnityEngine;
 
 public abstract class Consumable : MonoBehaviour
 {
-    public abstract void DoEffect();
+    public abstract void DoEffect(GameObject player);
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Head"))
         {
-            DoEffect();
+            DoEffect(other.gameObject);
             Destroy(gameObject);
         }
     }

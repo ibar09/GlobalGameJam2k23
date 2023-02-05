@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
         UP, DOWN, LEFT, RIGHT
     }
     [SerializeField]
-    private float x = 0f;
+    public float x = 0f;
     public Transform headTransform;
     public SpriteShapeController spriteShapeController;
     public EdgeCollider2D edgeCollider;
@@ -96,7 +96,13 @@ public class Player : MonoBehaviour
         gameManager.NextTurn();
         gameManager.ActivateControls();
     }
-
+    public void SetPosition(Vector2 position)
+    {
+        var localPosition = position - (Vector2)transform.position;
+        spriteShapeController.spline.SetPosition(0, localPosition);
+        headTransform.localPosition = localPosition;
+        updateEdgeCollider();
+    }
 
     public Direction DirectionRng()
     {
@@ -149,7 +155,7 @@ public class Player : MonoBehaviour
                 targetPosition = currentPosition + new Vector3(steps, 0, 0);
                 break;
         }
-        targetPosition = new Vector2(Mathf.Clamp(((Vector2)targetPosition).x, gameManager.center.position.x - transform.position.x - gameManager.width / 2 + 0.5f, gameManager.center.position.x - transform.position.x + gameManager.width / 2 - 0.5f), ((Vector2)targetPosition).y);
+        targetPosition = new Vector2(Mathf.Clamp(((Vector2)targetPosition).x, gameManager.GetCenter().x - transform.position.x - gameManager.width / 2 + 0.5f, gameManager.GetCenter().x - transform.position.x + gameManager.width / 2 - 0.5f), ((Vector2)targetPosition).y);
 
         if (((Vector2)targetPosition).y > -1)
         {
@@ -237,8 +243,8 @@ public class Player : MonoBehaviour
 
     public void Move(int steps)
     {
-
-        StartCoroutine(DirectionChooser(steps));
+        MoveBy(steps, direction);
+        // StartCoroutine(DirectionChooser(steps));
     }
 
 
