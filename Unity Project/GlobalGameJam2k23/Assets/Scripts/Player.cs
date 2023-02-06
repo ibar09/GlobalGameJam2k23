@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public Transform headTransform;
     public SpriteShapeController spriteShapeController;
     public EdgeCollider2D edgeCollider;
-    private float speed = 0.01f;
+    private float speed = 2f;
     private Vector2? targetPosition = null;
     public GameManager gameManager;
     public float animationSpeed;
@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     public int immunityCD = 0;
     public int downBoostCD = 0;
 
-    Direction direction;
+    // Direction direction;
 
     // Start is called before the first frame update
     void Start()
@@ -38,32 +38,32 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        if (targetPosition == null)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                direction = Direction.UP;
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                direction = Direction.DOWN;
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                direction = Direction.LEFT;
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                direction = Direction.RIGHT;
-            }
-        }
+        // if (targetPosition == null)
+        // {
+        //     if (Input.GetKeyDown(KeyCode.UpArrow))
+        //     {
+        //         direction = Direction.UP;
+        //     }
+        //     else if (Input.GetKeyDown(KeyCode.DownArrow))
+        //     {
+        //         direction = Direction.DOWN;
+        //     }
+        //     else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //     {
+        //         direction = Direction.LEFT;
+        //     }
+        //     else if (Input.GetKeyDown(KeyCode.RightArrow))
+        //     {
+        //         direction = Direction.RIGHT;
+        //     }
+        // }
 
         if (targetPosition != null)
         {
             Vector2 currentPosition = spriteShapeController.spline.GetPosition(0);
             if (currentPosition != targetPosition)
             {
-                Vector3 nextPosition = Vector2.MoveTowards(currentPosition, (Vector2)targetPosition, speed);
+                Vector3 nextPosition = Vector2.MoveTowards(currentPosition, (Vector2)targetPosition, speed * Time.deltaTime);
                 Vector3 prevPointPosition = spriteShapeController.spline.GetPosition(1);
                 if (Vector3.Distance(prevPointPosition, nextPosition) <= 0.2f)
                 {
@@ -110,6 +110,7 @@ public class Player : MonoBehaviour
     public Direction DirectionRng()
     {
         float downWeight = 0.25f + x;
+        Debug.Log(downWeight);
         float percentage = UnityEngine.Random.Range(0, 1f);
         Debug.Log(percentage);
         if (percentage <= downWeight)
@@ -158,7 +159,7 @@ public class Player : MonoBehaviour
                 targetPosition = currentPosition + new Vector3(steps, 0, 0);
                 break;
         }
-        targetPosition = new Vector2(Mathf.Clamp(((Vector2)targetPosition).x, gameManager.GetCenter().x - transform.position.x - gameManager.width / 2 + 0.5f, gameManager.GetCenter().x - transform.position.x + gameManager.width / 2 - 0.5f), ((Vector2)targetPosition).y);
+        targetPosition = new Vector2(Mathf.Clamp(((Vector2)targetPosition).x, gameManager.GetCenter().x - transform.position.x - (float)gameManager.width / 2 + 0.5f, gameManager.GetCenter().x - transform.position.x + (float)gameManager.width / 2 - 0.5f), ((Vector2)targetPosition).y);
 
         if (((Vector2)targetPosition).y > -1)
         {
@@ -351,6 +352,7 @@ public class Player : MonoBehaviour
         gameManager.animationSpeed = x;
         Direction d = DirectionRng();
         gameManager.directionText.text = d.ToString();
+        yield return new WaitForSeconds(0.5f);
         MoveBy(steps, d);
 
     }
